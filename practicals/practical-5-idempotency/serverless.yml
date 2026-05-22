@@ -1,0 +1,24 @@
+service: practical-5-idempotency
+frameworkVersion: "3"
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    REDIS_URL: ${env:REDIS_URL}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+
+plugins:
+  - serverless-offline
+
+functions:
+  generate:
+    handler: handler.generate
+    events:
+      - http:
+          path: generate
+          method: post
+          cors: true

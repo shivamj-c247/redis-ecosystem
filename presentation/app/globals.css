@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --redis-red: #dc382d;
+  --redis-red-light: #ff6b6b;
+  --ink: #0a0a0b;
+  --surface: #111114;
+  --line: #1f2025;
+}
+
+html,
+body {
+  background: var(--ink);
+  color: #f5f5f7;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-geist), system-ui, -apple-system, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(220, 56, 45, 0.35);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2c33;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3d44;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, #ff6b6b 50%, #dc382d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-red {
+  background: linear-gradient(135deg, #dc382d 0%, #ff6b6b 100%);
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(220, 56, 45, 0.18) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.scanline {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(220, 56, 45, 0.05) 50%,
+    transparent 100%
+  );
+}
+
+/* Shiki dark theme adjustments */
+.shiki {
+  background: transparent !important;
+  padding: 1rem;
+  font-size: 13px;
+  line-height: 1.6;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 30 npm run dev)",
+      "Bash(echo \"PID=$!\")",
+      "Bash(wait)"
+    ]
+  }
+}

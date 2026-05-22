@@ -1,0 +1,20 @@
+{
+  "name": "practical-3-redisearch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-text search with RediSearch FT.SEARCH",
+  "main": "handler.js",
+  "scripts": {
+    "start": "serverless offline",
+    "dev": "serverless offline",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.40.0",
+    "serverless-offline": "^13.6.0"
+  }
+}

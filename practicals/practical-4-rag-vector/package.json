@@ -1,0 +1,21 @@
+{
+  "name": "practical-4-rag-vector",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RAG over Redis Vector — embed, KNN, then LLM with retrieved context",
+  "main": "handler.js",
+  "scripts": {
+    "start": "serverless offline",
+    "dev": "serverless offline",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^4.65.0",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.40.0",
+    "serverless-offline": "^13.6.0"
+  }
+}

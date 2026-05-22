@@ -1,0 +1,31 @@
+service: practical-6-chat-memory
+frameworkVersion: "3"
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    REDIS_URL: ${env:REDIS_URL}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+
+plugins:
+  - serverless-offline
+
+functions:
+  chat:
+    handler: handler.chat
+    events:
+      - http:
+          path: chat
+          method: post
+          cors: true
+  reset:
+    handler: handler.reset
+    events:
+      - http:
+          path: chat/{sessionId}
+          method: delete
+          cors: true
