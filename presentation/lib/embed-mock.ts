@@ -1,7 +1,7 @@
 // Deterministic 2D "embeddings" used purely for visualization in the keynote.
 // NOT a real embedding model — just a stable mapping from text → (x, y) so we
 // can show vector-space scatter plots and similarity matches without calling
-// OpenAI from the browser.
+// the embedding API from the browser.
 //
 // The mapping uses character frequencies hashed into two axes. Texts that share
 // vocabulary land near each other, which is enough to *demonstrate* the idea.

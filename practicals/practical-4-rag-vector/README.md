@@ -2,16 +2,16 @@
 
 **Pattern:** Retrieval Augmented Generation over Redis Vector.
 
-1. Embed the user question with `text-embedding-3-small`.
+1. Embed the user question with Gemini's `text-embedding-004` (768-dim).
 2. KNN search the top-3 documents from `idx:rag`.
-3. Stuff them into the OpenAI prompt as context, get an answer, return with sources.
+3. Stuff them into the Gemini prompt as context, get an answer, return with sources.
 
 ## Run
 
 ```bash
 cp .env.example .env
 npm install
-npm run seed             # embeds 20 docs (~5 sec, ~$0.001 in OpenAI cost)
+npm run seed             # embeds 20 docs (~5 sec, free on Gemini's free tier)
 npx serverless offline
 ```
 
@@ -35,8 +35,9 @@ const result = await redis.ft.search(
   { PARAMS: { vec: queryVec }, SORTBY: "score", DIALECT: 2 }
 );
 const context = result.documents.map(d => d.value.body).join("\n\n");
-const answer = await openai.chat.completions.create({
-  messages: [{ role: "user", content: `Context: ${context}\n\nQ: ${question}` }],
+const { text: answer } = await ai.models.generateContent({
+  model: "gemini-flash-latest",
+  contents: `Context: ${context}\n\nQ: ${question}`,
 });
 ```
 

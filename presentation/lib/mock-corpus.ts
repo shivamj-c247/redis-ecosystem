@@ -23,7 +23,7 @@ export const corpus: CorpusDoc[] = [
   {
     id: "3",
     title: "Caching LLM responses",
-    body: "Caching responses by an input hash turns a 800ms OpenAI request into a 4ms Redis GET.",
+    body: "Caching responses by an input hash turns a 800ms Gemini request into a 4ms Redis GET.",
     tags: "ai,cache,llm",
   },
   {

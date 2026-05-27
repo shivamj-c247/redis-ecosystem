@@ -2,11 +2,13 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const { createClient, SchemaFieldTypes, VectorAlgorithms } = require("redis");
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 
 const INDEX_NAME = "idx:rag";
 const KEY_PREFIX = "rag:doc:";
-const DIM = 1536;
+const EMBED_MODEL = "text-embedding-004";
+// Gemini text-embedding-004 produces 768-dimensional vectors.
+const DIM = 768;
 
 function floatsToBuffer(arr) {
   const buf = Buffer.alloc(arr.length * 4);
@@ -19,7 +21,7 @@ async function main() {
     fs.readFileSync(path.join(__dirname, "..", "..", "shared-corpus.json"), "utf8")
   );
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   const redis = createClient({ url: process.env.REDIS_URL });
   redis.on("error", (err) => console.error("[redis]", err));
   await redis.connect();
@@ -48,14 +50,14 @@ async function main() {
 
   console.log(`embedding ${corpus.length} documents...`);
   for (const doc of corpus) {
-    const r = await openai.embeddings.create({
-      model: "text-embedding-3-small",
-      input: `${doc.title}\n\n${doc.body}`,
+    const r = await ai.models.embedContent({
+      model: EMBED_MODEL,
+      contents: `${doc.title}\n\n${doc.body}`,
     });
     await redis.hSet(KEY_PREFIX + doc.id, {
       title: doc.title,
       body: doc.body,
-      embedding: floatsToBuffer(r.data[0].embedding),
+      embedding: floatsToBuffer(r.embeddings[0].values),
     });
     process.stdout.write(".");
   }

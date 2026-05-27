@@ -7,9 +7,10 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
+  timeout: 30 # LLM calls + SDK retries need more than the 6s default
   environment:
     REDIS_URL: ${env:REDIS_URL}
-    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    GEMINI_API_KEY: ${env:GEMINI_API_KEY}
 
 plugins:
   - serverless-offline

@@ -35,13 +35,20 @@ curl -X DELETE http://localhost:3000/dev/chat/$SID
 
 ```js
 const history = (await redis.lRange(key, 0, -1)).reverse().map(JSON.parse);
-const messages = [systemPrompt, ...history, { role: "user", content: message }];
+const contents = [
+  ...history.map(m => ({ role: m.role, parts: [{ text: m.content }] })),
+  { role: "user", parts: [{ text: message }] },
+];
 
-const reply = await openai.chat.completions.create({ messages });
+const { text: reply } = await ai.models.generateContent({
+  model: "gemini-flash-latest",
+  contents,
+  config: { systemInstruction: systemPrompt },
+});
 
 await redis.multi()
   .lPush(key, JSON.stringify({ role: "user", content: message }))
-  .lPush(key, JSON.stringify({ role: "assistant", content: reply }))
+  .lPush(key, JSON.stringify({ role: "model", content: reply }))   // Gemini uses "model"
   .lTrim(key, 0, 39)                  // cap at 20 turns
   .expire(key, 1800)                  // sliding 30-min TTL
   .exec();

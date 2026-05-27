@@ -1,12 +1,14 @@
 const crypto = require("crypto");
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 const { getRedis } = require("./lib/redis");
 const { ensureIndex, floatsToBuffer, KEY_PREFIX, INDEX_NAME } = require("./lib/index");
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const CHAT_MODEL = "gemini-flash-latest";
+const EMBED_MODEL = "text-embedding-004";
 
 // Cosine distance threshold — anything below this is considered a semantic hit.
-// Lower = stricter. 0.15 is a reasonable starting point for text-embedding-3-small.
+// Lower = stricter. 0.15 is a reasonable starting point for text-embedding-004.
 const SIMILARITY_THRESHOLD = 0.15;
 
 function ok(body) {
@@ -26,11 +28,11 @@ function bad(message) {
 }
 
 async function embed(text) {
-  const r = await openai.embeddings.create({
-    model: "text-embedding-3-small",
-    input: text,
+  const r = await ai.models.embedContent({
+    model: EMBED_MODEL,
+    contents: text,
   });
-  return r.data[0].embedding;
+  return r.embeddings[0].values;
 }
 
 module.exports.chat = async (event) => {
@@ -77,11 +79,11 @@ module.exports.chat = async (event) => {
     }
   }
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: question }],
+  const completion = await ai.models.generateContent({
+    model: CHAT_MODEL,
+    contents: question,
   });
-  const answer = completion.choices[0].message.content;
+  const answer = completion.text;
 
   const id = crypto.randomUUID();
   await redis.hSet(KEY_PREFIX + id, {

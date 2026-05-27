@@ -7,6 +7,7 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
+  timeout: 30 # generous headroom for the first Redis Cloud connection
   environment:
     REDIS_URL: ${env:REDIS_URL}
 

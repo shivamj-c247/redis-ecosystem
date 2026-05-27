@@ -2,7 +2,8 @@ const { SchemaFieldTypes, VectorAlgorithms } = require("redis");
 
 const INDEX_NAME = "idx:langcache";
 const KEY_PREFIX = "cache:lc:";
-const DIM = 1536;
+// Gemini text-embedding-004 produces 768-dimensional vectors.
+const DIM = 768;
 
 async function ensureIndex(redis) {
   try {

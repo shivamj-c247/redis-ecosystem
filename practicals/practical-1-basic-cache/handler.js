@@ -1,8 +1,9 @@
 const crypto = require("crypto");
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 const { getRedis } = require("./lib/redis");
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const CHAT_MODEL = "gemini-flash-latest";
 
 const TTL_SECONDS = 60 * 60;
 const EST_COST_PER_CALL_USD = 0.0001;
@@ -49,11 +50,11 @@ module.exports.chat = async (event) => {
     });
   }
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: question }],
+  const completion = await ai.models.generateContent({
+    model: CHAT_MODEL,
+    contents: question,
   });
-  const answer = completion.choices[0].message.content;
+  const answer = completion.text;
 
   await redis.set(key, answer, { EX: TTL_SECONDS });
 

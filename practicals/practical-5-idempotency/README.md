@@ -15,7 +15,7 @@ npx serverless offline
 ## Try it
 
 ```bash
-# Same key, multiple calls — OpenAI called ONCE.
+# Same key, multiple calls — Gemini called ONCE.
 KEY=$(uuidgen)
 for i in 1 2 3; do
   curl -X POST http://localhost:3000/dev/generate \
@@ -27,7 +27,7 @@ done
 ```
 
 First call: `replayed: false`, returns the answer and stores it.
-Calls 2–3: `replayed: true`, return the same answer instantly with **zero** new OpenAI cost.
+Calls 2–3: `replayed: true`, return the same answer instantly with **zero** new Gemini calls.
 
 ## The code that matters
 
@@ -44,7 +44,10 @@ if (claimed === null) {
   return { ...JSON.parse(existing), replayed: true };
 }
 
-const response = await openai.chat.completions.create({...});
+const response = await ai.models.generateContent({
+  model: "gemini-flash-latest",
+  contents: prompt,
+});
 await redis.set(`idem:${key}`, JSON.stringify(response), { EX: 86400 });
 ```
 
@@ -57,4 +60,4 @@ curl --retry 3 -X POST http://localhost:3000/dev/generate \
   -d '{"prompt":"Same"}'
 ```
 
-`--retry 3` retries on network failure. With idempotency: 1 OpenAI call. Without: up to 3.
+`--retry 3` retries on network failure. With idempotency: 1 Gemini call. Without: up to 3.

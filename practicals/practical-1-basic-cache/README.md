@@ -2,12 +2,12 @@
 
 **Pattern:** exact-match caching of LLM responses with `SET key value EX seconds`.
 
-Hash the question, use that as a Redis key, store the OpenAI answer with a 1-hour TTL. Second request with the **same** question returns from Redis in ~5ms instead of waiting ~800ms for OpenAI.
+Hash the question, use that as a Redis key, store the Gemini answer with a 1-hour TTL. Second request with the **same** question returns from Redis in ~5ms instead of waiting ~800ms for Gemini.
 
 ## Run
 
 ```bash
-cp .env.example .env   # fill in REDIS_URL and OPENAI_API_KEY
+cp .env.example .env   # fill in REDIS_URL and GEMINI_API_KEY
 npm install
 npx serverless offline
 ```
@@ -15,7 +15,7 @@ npx serverless offline
 ## Try it
 
 ```bash
-# First call — cache miss, hits OpenAI
+# First call — cache miss, hits Gemini
 curl -X POST http://localhost:3000/dev/chat \
   -H "Content-Type: application/json" \
   -d '{"question":"What is Redis?"}'
@@ -33,7 +33,10 @@ const key = "cache:exact:" + sha256(question);
 const cached = await redis.get(key);
 if (cached) return { cached: true, answer: cached };
 
-const answer = await openai.chat.completions.create({...});
+const { text: answer } = await ai.models.generateContent({
+  model: "gemini-flash-latest",
+  contents: question,
+});
 await redis.set(key, answer, { EX: 3600 });
 ```
 

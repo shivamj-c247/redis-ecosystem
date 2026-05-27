@@ -76,7 +76,7 @@ export function RedisForAI() {
               code={`# One-time: create a vector index
 FT.CREATE idx:rag ON HASH PREFIX 1 rag:doc:
   SCHEMA embedding VECTOR HNSW 6
-         TYPE FLOAT32 DIM 1536
+         TYPE FLOAT32 DIM 768
          DISTANCE_METRIC COSINE
          title TEXT body TEXT
 

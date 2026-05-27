@@ -77,7 +77,7 @@ export const NOTES: PresenterNote[] = [
     bullets: [
       "Type 'What is Redis?' → MISS.",
       "Type 'Explain Redis to me' → semantic HIT.",
-      "Compare 4ms (Redis) vs 850ms (OpenAI). Cost savings argument.",
+      "Compare 4ms (Redis) vs 850ms (Gemini). Cost savings argument.",
     ],
     demo: "Switch to Practical 2 to show the real KNN cache in action.",
   },

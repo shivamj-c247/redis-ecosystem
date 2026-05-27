@@ -9,8 +9,8 @@
     "dev": "serverless offline"
   },
   "dependencies": {
+    "@google/genai": "^1.50.0",
     "dotenv": "^16.4.5",
-    "openai": "^4.65.0",
     "redis": "^4.7.0"
   },
   "devDependencies": {

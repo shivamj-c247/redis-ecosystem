@@ -35,7 +35,7 @@ export function SemanticCacheDemo() {
           <span className="gradient-text">Watch the cache decide.</span>
         </>
       }
-      description="Different wording, same intent → semantic hit. This is what Practical 2 does for real with OpenAI embeddings + Redis Vector."
+      description="Different wording, same intent → semantic hit. This is what Practical 2 does for real with Gemini embeddings + Redis Vector."
     >
       <div className="grid gap-8 lg:grid-cols-[1fr_460px]">
         <div className="space-y-6">
@@ -92,7 +92,7 @@ export function SemanticCacheDemo() {
                   <Latency
                     label="Cache miss"
                     value="850ms"
-                    sub="OpenAI roundtrip"
+                    sub="Gemini roundtrip"
                     tone="miss"
                   />
                 </div>

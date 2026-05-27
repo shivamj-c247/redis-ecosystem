@@ -1,7 +1,8 @@
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 const { getRedis } = require("./lib/redis");
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const CHAT_MODEL = "gemini-flash-latest";
 
 const PROCESSING_TTL = 60;
 const RESPONSE_TTL = 60 * 60 * 24;
@@ -68,14 +69,14 @@ module.exports.generate = async (event) => {
   }
 
   // We own the key — actually do the work.
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: prompt }],
+  const completion = await ai.models.generateContent({
+    model: CHAT_MODEL,
+    contents: prompt,
   });
 
   const response = {
-    answer: completion.choices[0].message.content,
-    usage: completion.usage,
+    answer: completion.text,
+    usage: completion.usageMetadata,
   };
 
   await redis.set(key, JSON.stringify(response), { EX: RESPONSE_TTL });

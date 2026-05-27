@@ -2,7 +2,7 @@
 
 **Pattern:** semantic caching of LLM responses using Redis Vector + KNN.
 
-Different wordings of the same question should hit the same cache entry. We embed the question with `text-embedding-3-small`, do a 1-NN search in Redis, and return the cached answer if cosine distance is below a threshold.
+Different wordings of the same question should hit the same cache entry. We embed the question with Gemini's `text-embedding-004` (768-dim), do a 1-NN search in Redis, and return the cached answer if cosine distance is below a threshold.
 
 ## Run
 

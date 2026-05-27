@@ -1,7 +1,9 @@
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 const { getRedis, floatsToBuffer } = require("./lib/redis");
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const CHAT_MODEL = "gemini-flash-latest";
+const EMBED_MODEL = "text-embedding-004";
 const INDEX_NAME = "idx:rag";
 const TOP_K = 3;
 
@@ -33,11 +35,11 @@ module.exports.ask = async (event) => {
 
   const redis = await getRedis();
 
-  const embeddingRes = await openai.embeddings.create({
-    model: "text-embedding-3-small",
-    input: question,
+  const embeddingRes = await ai.models.embedContent({
+    model: EMBED_MODEL,
+    contents: question,
   });
-  const queryVec = floatsToBuffer(embeddingRes.data[0].embedding);
+  const queryVec = floatsToBuffer(embeddingRes.embeddings[0].values);
 
   let result;
   try {
@@ -68,20 +70,17 @@ module.exports.ask = async (event) => {
     .map((d, i) => `[${i + 1}] ${d.value.title}\n${d.value.body}`)
     .join("\n\n");
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content:
-          "Answer using ONLY the provided context. If the context is insufficient, say so. Cite sources by their [number].",
-      },
-      { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` },
-    ],
+  const completion = await ai.models.generateContent({
+    model: CHAT_MODEL,
+    contents: `Context:\n${context}\n\nQuestion: ${question}`,
+    config: {
+      systemInstruction:
+        "Answer using ONLY the provided context. If the context is insufficient, say so. Cite sources by their [number].",
+    },
   });
 
   return ok({
-    answer: completion.choices[0].message.content,
+    answer: completion.text,
     sources,
     ms: Date.now() - started,
   });

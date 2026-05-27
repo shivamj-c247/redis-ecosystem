@@ -28,7 +28,7 @@ Each practical is **self-contained** — clone, install, run. No monorepo.
 ```bash
 cd practicals/practical-1-basic-cache
 npm install
-cp .env.example .env   # fill REDIS_URL and OPENAI_API_KEY
+cp .env.example .env   # fill REDIS_URL and GEMINI_API_KEY
 npx serverless offline
 # POST http://localhost:3000/chat
 ```
@@ -37,7 +37,7 @@ npx serverless offline
 
 - Node.js 20+
 - A free [Redis Cloud](https://redis.com/try-free/) instance (Redis Stack — RediSearch + Vector enabled)
-- An [OpenAI API key](https://platform.openai.com/api-keys)
+- A [Google AI Studio API key](https://aistudio.google.com/apikey) (free tier)
 
 ## The 6 practicals
 

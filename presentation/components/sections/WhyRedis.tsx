@@ -27,7 +27,7 @@ const CARDS = [
   {
     icon: Layers,
     title: "Caching that scales",
-    body: "Sit between your app and the DB. Or between your app and OpenAI.",
+    body: "Sit between your app and the DB. Or between your app and the LLM.",
     user: "Stripe, Shopify",
   },
   {
@@ -40,7 +40,7 @@ const CARDS = [
     icon: BrainCircuit,
     title: "Vectors for AI",
     body: "RediSearch + HNSW = production-grade vector DB inside the same Redis.",
-    user: "OpenAI ecosystem",
+    user: "AI/LLM ecosystem",
   },
 ];
 

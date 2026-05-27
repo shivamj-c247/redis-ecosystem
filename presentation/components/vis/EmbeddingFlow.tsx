@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
 
 const VECTOR_PREVIEW = [0.12, -0.34, 0.81, 0.05, -0.67, 0.42, 0.91];
+const EMBED_MODEL = "text-embedding-004";
+const EMBED_DIM = "768d";
 
 export function EmbeddingFlow() {
   return (
@@ -16,13 +18,13 @@ export function EmbeddingFlow() {
       <Arrow />
       <Node
         title="Embed model"
-        body="text-embedding-3-small"
+        body={EMBED_MODEL}
         kind="model"
         icon={<Sparkles size={14} />}
       />
       <Arrow />
       <Node
-        title="Vector (1536d)"
+        title={`Vector (${EMBED_DIM})`}
         body={
           <div className="font-mono text-[11px] text-amber-200">
             [

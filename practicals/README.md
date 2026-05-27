@@ -5,7 +5,7 @@ Six standalone Node.js + Serverless Framework projects. Each runs locally via `s
 ## Setup once
 
 1. **Get a Redis Cloud free instance** at https://redis.com/try-free/. Make sure RediSearch and RedisJSON are enabled (Redis Stack — default on the free tier).
-2. **Get an OpenAI API key** at https://platform.openai.com/api-keys.
+2. **Get a Google AI Studio API key** (free) at https://aistudio.google.com/apikey.
 3. Pick a practical, copy `.env.example` to `.env`, fill the values.
 
 ```bash

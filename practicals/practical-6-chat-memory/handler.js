@@ -1,7 +1,8 @@
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 const { getRedis } = require("./lib/redis");
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const CHAT_MODEL = "gemini-flash-latest";
 
 const MAX_TURNS = 20;
 const SLIDING_TTL_SECONDS = 30 * 60;
@@ -44,26 +45,28 @@ module.exports.chat = async (event) => {
   const key = keyFor(sessionId);
 
   // LRANGE pulls oldest → newest because we LPUSH and reverse.
+  // Stored entries use Gemini roles directly: "user" and "model".
   const raw = await redis.lRange(key, 0, -1);
   const history = raw.reverse().map((s) => JSON.parse(s));
 
-  const messages = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...history,
-    { role: "user", content: message },
+  // Build Gemini `contents`: array of { role, parts: [{ text }] }.
+  const contents = [
+    ...history.map((m) => ({ role: m.role, parts: [{ text: m.content }] })),
+    { role: "user", parts: [{ text: message }] },
   ];
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages,
+  const completion = await ai.models.generateContent({
+    model: CHAT_MODEL,
+    contents,
+    config: { systemInstruction: SYSTEM_PROMPT },
   });
-  const reply = completion.choices[0].message.content;
+  const reply = completion.text;
 
   // Append both turns, cap window, refresh TTL.
   await redis
     .multi()
     .lPush(key, JSON.stringify({ role: "user", content: message }))
-    .lPush(key, JSON.stringify({ role: "assistant", content: reply }))
+    .lPush(key, JSON.stringify({ role: "model", content: reply }))
     .lTrim(key, 0, MAX_TURNS * 2 - 1)
     .expire(key, SLIDING_TTL_SECONDS)
     .exec();
