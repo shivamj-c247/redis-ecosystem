@@ -32,10 +32,12 @@ export const NOTES: PresenterNote[] = [
   {
     sectionId: "data-structures",
     bullets: [
-      "Walk through each tab — Strings → Streams. Don't dwell.",
-      "Highlight: 'pick the right structure and most problems shrink to two commands'.",
-      "Bridge: 'let's actually run these'.",
+      "Tap through the core 6 (Strings → Streams), then show JSON / Geo / TimeSeries as 'Redis is more than KV'.",
+      "Use [ ] or number keys to jump — the mini-terminal auto-runs each command.",
+      "Open one 'interview question' to engage the room. Click 'Open official docs' once to show it's real.",
+      "Mention the Docker quick-start at the bottom for anyone following along.",
     ],
+    demo: "Optional: expand 'Running Redis locally' to show the docker run one-liner.",
   },
   {
     sectionId: "cli",

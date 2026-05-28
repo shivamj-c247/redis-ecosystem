@@ -1,221 +1,252 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  ExternalLink,
+  ChevronDown,
+  Lightbulb,
+  Sparkles,
+  CheckCircle2,
+  Keyboard,
+} from "lucide-react";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { CodeBlock } from "@/components/ui/CodeBlock";
-
-interface DS {
-  name: string;
-  useCase: string;
-  cmd: string;
-  desc: string;
-  visual: React.ReactNode;
-}
-
-function StringVisual() {
-  return (
-    <div className="flex items-center justify-center gap-3 font-mono text-sm">
-      <Pill label="user:42" muted />
-      <span className="text-redis-muted">→</span>
-      <Pill label='"alice"' />
-    </div>
-  );
-}
-
-function HashVisual() {
-  return (
-    <div className="space-y-1 font-mono text-sm">
-      <Row k="name" v='"alice"' />
-      <Row k="email" v='"a@x.com"' />
-      <Row k="plan" v='"pro"' />
-    </div>
-  );
-}
-
-function ListVisual() {
-  return (
-    <div className="flex items-center gap-1 font-mono text-sm">
-      <Pill label="msg-3" />
-      <Arr />
-      <Pill label="msg-2" />
-      <Arr />
-      <Pill label="msg-1" />
-    </div>
-  );
-}
-
-function SetVisual() {
-  return (
-    <div className="flex flex-wrap gap-1.5 font-mono text-sm">
-      {["redis", "ai", "vector"].map((t) => (
-        <Pill key={t} label={t} />
-      ))}
-    </div>
-  );
-}
-
-function ZSetVisual() {
-  return (
-    <div className="space-y-1 font-mono text-sm">
-      {[
-        ["alice", 980],
-        ["bob", 940],
-        ["carol", 870],
-      ].map(([n, s]) => (
-        <div key={n} className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1">
-          <span>{n}</span>
-          <span className="text-amber-200">{s}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function StreamVisual() {
-  return (
-    <div className="space-y-1 font-mono text-xs">
-      <div className="rounded-md bg-white/5 px-2 py-1">
-        <span className="text-redis-redLight">1730-0</span> · user.login alice
-      </div>
-      <div className="rounded-md bg-white/5 px-2 py-1">
-        <span className="text-redis-redLight">1731-0</span> · order.created #42
-      </div>
-      <div className="rounded-md bg-white/5 px-2 py-1">
-        <span className="text-redis-redLight">1732-0</span> · payment.ok #42
-      </div>
-    </div>
-  );
-}
-
-const DATA: DS[] = [
-  {
-    name: "Strings",
-    useCase: "Cache, counters, flags",
-    cmd: "SET user:42 alice\nGET user:42\nINCR page_views",
-    desc: "Binary-safe values up to 512 MB. The bedrock of every Redis tutorial.",
-    visual: <StringVisual />,
-  },
-  {
-    name: "Hashes",
-    useCase: "Object fields, sessions",
-    cmd: 'HSET user:42 name "alice" plan "pro"\nHGET user:42 name',
-    desc: "Flat field → value map per key. Memory-efficient for small objects.",
-    visual: <HashVisual />,
-  },
-  {
-    name: "Lists",
-    useCase: "Queues, timelines, history",
-    cmd: 'LPUSH inbox:42 "hello"\nLRANGE inbox:42 0 -1',
-    desc: "Linked lists. Push/pop from either end in O(1). Great for FIFO/LIFO.",
-    visual: <ListVisual />,
-  },
-  {
-    name: "Sets",
-    useCase: "Unique tags, membership",
-    cmd: "SADD tags:42 redis ai vector\nSISMEMBER tags:42 ai",
-    desc: "Unordered collections with O(1) membership. Set algebra built-in.",
-    visual: <SetVisual />,
-  },
-  {
-    name: "Sorted Sets",
-    useCase: "Leaderboards, ranges",
-    cmd: "ZADD lb 980 alice 940 bob\nZRANGE lb 0 -1 WITHSCORES",
-    desc: "Members ordered by score. O(log N) inserts, range scans by score or rank.",
-    visual: <ZSetVisual />,
-  },
-  {
-    name: "Streams",
-    useCase: "Event log, work queues",
-    cmd: 'XADD orders * type "created" id 42\nXRANGE orders - +',
-    desc: "Append-only log with consumer groups. Mini-Kafka inside Redis.",
-    visual: <StreamVisual />,
-  },
-];
+import { MiniTerminal } from "@/components/ui/MiniTerminal";
+import { DockerQuickStart } from "./DockerQuickStart";
+import { STRUCTURES } from "./data-structures.data";
 
 export function DataStructures() {
   const [active, setActive] = useState(0);
-  const ds = DATA[active];
+  const [showInterview, setShowInterview] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const ds = STRUCTURES[active];
+
+  const select = useCallback((i: number) => {
+    const n = STRUCTURES.length;
+    setActive(((i % n) + n) % n);
+    setShowInterview(false);
+  }, []);
+
+  // Keyboard nav scoped to this section only — uses [ ] and number keys so it
+  // never collides with the deck's global ← → section navigation.
+  useEffect(() => {
+    function inView() {
+      const el = sectionRef.current;
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return r.top < window.innerHeight * 0.5 && r.bottom > window.innerHeight * 0.5;
+    }
+    function onKey(e: KeyboardEvent) {
+      const t = e.target as HTMLElement;
+      if (t?.tagName === "INPUT" || t?.tagName === "TEXTAREA") return;
+      if (!inView()) return;
+      if (e.key === "]") {
+        e.preventDefault();
+        setActive((a) => (a + 1) % STRUCTURES.length);
+        setShowInterview(false);
+      } else if (e.key === "[") {
+        e.preventDefault();
+        setActive((a) => (a - 1 + STRUCTURES.length) % STRUCTURES.length);
+        setShowInterview(false);
+      } else if (/^[1-9]$/.test(e.key)) {
+        const idx = parseInt(e.key, 10) - 1;
+        if (idx < STRUCTURES.length) {
+          e.preventDefault();
+          select(idx);
+        }
+      } else if (e.key === "0") {
+        if (STRUCTURES.length >= 10) {
+          e.preventDefault();
+          select(9);
+        }
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [select]);
 
   return (
     <SectionWrapper
       id="data-structures"
       number={4}
-      eyebrow="Data Structures"
+      eyebrow="Data Structures Playground"
       title={
         <>
-          A playground of <span className="gradient-text">primitives.</span>
+          11 structures. <span className="gradient-text">One engine.</span>
         </>
       }
-      description="Redis isn't just key-value. Pick the right structure and most problems collapse to two commands."
+      description="Pick the right structure and most problems collapse to two commands. Tap a type to explore — or use [ ] and number keys."
     >
-      <div className="flex flex-wrap gap-2">
-        {DATA.map((d, i) => (
-          <button
-            key={d.name}
-            onClick={() => setActive(i)}
-            className={`rounded-full px-4 py-1.5 text-sm transition-all ${
-              i === active
-                ? "bg-redis-red text-white shadow-[0_0_20px_rgba(220,56,45,0.4)]"
-                : "glass text-redis-muted hover:text-white"
-            }`}
-          >
-            {d.name}
-          </button>
-        ))}
-      </div>
+      <div ref={sectionRef}>
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-2">
+          {STRUCTURES.map((d, i) => {
+            const Icon = d.icon;
+            return (
+              <button
+                key={d.id}
+                onClick={() => select(i)}
+                className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm transition-all ${
+                  i === active
+                    ? "bg-redis-red text-white shadow-[0_0_20px_rgba(220,56,45,0.4)]"
+                    : "glass text-redis-muted hover:text-white"
+                }`}
+              >
+                <Icon size={14} />
+                {d.name}
+              </button>
+            );
+          })}
+        </div>
 
-      <div className="mt-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={ds.name}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35 }}
-            className="grid gap-6 lg:grid-cols-3"
-          >
-            <div className="glass rounded-2xl p-6">
-              <div className="text-xs uppercase tracking-widest text-redis-red">
-                {ds.useCase}
+        {/* Progress indicator */}
+        <div className="mt-4 flex items-center gap-3">
+          <div className="flex flex-1 gap-1">
+            {STRUCTURES.map((d, i) => (
+              <button
+                key={d.id}
+                onClick={() => select(i)}
+                aria-label={d.name}
+                className={`h-1 flex-1 rounded-full transition-all ${
+                  i === active ? "bg-redis-red" : "bg-white/10 hover:bg-white/25"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="shrink-0 font-mono text-xs text-redis-muted">
+            {String(active + 1).padStart(2, "0")} / {STRUCTURES.length}
+          </span>
+        </div>
+
+        {/* Active card */}
+        <div className="mt-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={ds.id}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="grid gap-6 lg:grid-cols-2"
+            >
+              {/* Left: info */}
+              <div className="space-y-5">
+                <div className="glass rounded-2xl p-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-redis-red">
+                        <ds.icon size={14} />
+                        Data type
+                      </div>
+                      <h3 className="mt-2 text-3xl font-semibold">{ds.name}</h3>
+                    </div>
+                    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+                      <Sparkles size={12} />
+                      {ds.bestUseCase}
+                    </span>
+                  </div>
+                  <p className="mt-4 text-redis-muted">{ds.description}</p>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {ds.useCases.map((u) => (
+                      <span
+                        key={u}
+                        className="rounded-lg border border-redis-line bg-black/40 px-2.5 py-1 text-xs text-white/80"
+                      >
+                        {u}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-redis-line bg-black/40 p-5">
+                    <div className="mb-2 text-xs uppercase tracking-widest text-redis-red">
+                      Example scenario
+                    </div>
+                    <p className="text-sm text-white/90">{ds.scenario}</p>
+                  </div>
+                  <div className="rounded-2xl border border-redis-line bg-black/40 p-5">
+                    <div className="mb-2 flex items-center gap-1.5 text-xs uppercase tracking-widest text-emerald-400">
+                      <CheckCircle2 size={12} />
+                      When to use
+                    </div>
+                    <p className="text-sm text-white/90">{ds.whenToUse}</p>
+                  </div>
+                </div>
+
+                <a
+                  href={ds.docsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 rounded-full border border-redis-red/40 bg-redis-red/10 px-5 py-2.5 text-sm text-redis-redLight transition-all hover:bg-redis-red hover:text-white"
+                >
+                  Open official docs
+                  <ExternalLink
+                    size={14}
+                    className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  />
+                </a>
               </div>
-              <h3 className="mt-2 text-3xl font-semibold">{ds.name}</h3>
-              <p className="mt-4 text-redis-muted">{ds.desc}</p>
-            </div>
 
-            <div className="flex items-center justify-center rounded-2xl border border-redis-line bg-black/40 p-6">
-              {ds.visual}
-            </div>
+              {/* Right: visual + terminal + interview */}
+              <div className="space-y-5">
+                <div className="flex min-h-[140px] items-center justify-center rounded-2xl border border-redis-line bg-black/40 p-6">
+                  {ds.visual}
+                </div>
 
-            <CodeBlock code={ds.cmd} language="bash" showCopy={false} />
-          </motion.div>
-        </AnimatePresence>
+                <MiniTerminal steps={ds.steps} replayKey={ds.id} />
+
+                <div className="glass overflow-hidden rounded-2xl">
+                  <button
+                    onClick={() => setShowInterview((s) => !s)}
+                    className="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-white/[0.02]"
+                  >
+                    <Lightbulb size={16} className="text-amber-300" />
+                    <span className="flex-1 text-sm font-medium">
+                      Commonly asked interview question
+                    </span>
+                    <motion.div animate={{ rotate: showInterview ? 180 : 0 }}>
+                      <ChevronDown size={16} className="text-redis-muted" />
+                    </motion.div>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {showInterview && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="space-y-2 border-t border-redis-line p-4">
+                          <p className="text-sm font-medium text-amber-200">
+                            Q: {ds.interview.q}
+                          </p>
+                          <p className="text-sm text-redis-muted">
+                            {ds.interview.a}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Keyboard hint */}
+        <div className="mt-6 inline-flex items-center gap-2 text-xs text-redis-muted">
+          <Keyboard size={12} />
+          Navigate:
+          <kbd className="rounded bg-white/10 px-1.5 py-0.5 font-mono">[</kbd>
+          <kbd className="rounded bg-white/10 px-1.5 py-0.5 font-mono">]</kbd>
+          or
+          <kbd className="rounded bg-white/10 px-1.5 py-0.5 font-mono">1–9</kbd>
+        </div>
+
+        <DockerQuickStart />
       </div>
     </SectionWrapper>
-  );
-}
-
-function Pill({ label, muted }: { label: string; muted?: boolean }) {
-  return (
-    <span
-      className={`rounded-md px-2 py-1 ${
-        muted ? "bg-white/5 text-redis-muted" : "bg-redis-red/15 text-redis-redLight"
-      }`}
-    >
-      {label}
-    </span>
-  );
-}
-
-function Arr() {
-  return <span className="text-redis-muted">→</span>;
-}
-
-function Row({ k, v }: { k: string; v: string }) {
-  return (
-    <div className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1">
-      <span className="text-redis-muted">{k}</span>
-      <span className="text-amber-200">{v}</span>
-    </div>
   );
 }
