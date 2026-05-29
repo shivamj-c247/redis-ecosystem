@@ -57,11 +57,28 @@ export const NOTES: PresenterNote[] = [
     demo: "Optional: switch to Practical 5 to show real idempotency.",
   },
   {
+    sectionId: "db-vs-redis",
+    bullets: [
+      "Frame it: not rivals — layers. DB = source of truth, Redis = speed layer.",
+      "Point at the latency bars: Redis ~1ms vs uncached join ~120ms.",
+      "Walk the decision tree: read-heavy / sub-ms / real-time → Redis; ACID + joins → DB.",
+    ],
+  },
+  {
+    sectionId: "alternatives",
+    bullets: [
+      "Click each tab. Be fair — name where the competitor genuinely wins.",
+      "Memcached: simpler but strings-only. DAX: only caches DynamoDB.",
+      "Land the verdict line each time — Redis wins on breadth + ecosystem.",
+    ],
+  },
+  {
     sectionId: "streams",
     bullets: [
       "Animation runs continuously — let it run while you talk.",
       "Streams = log + consumer groups + replay. Mini-Kafka in Redis.",
-      "Use case: order events fanned to workers + analytics.",
+      "Consumer groups: fan-out across groups, parallelism within a group, XACK + PEL for reliability.",
+      "Event-driven example: producer doesn't know its consumers — add a group, change nothing upstream.",
     ],
   },
   {
@@ -131,10 +148,27 @@ export const NOTES: PresenterNote[] = [
     ],
   },
   {
+    sectionId: "redis-aws",
+    bullets: [
+      "Three options: ElastiCache (cache), MemoryDB (durable primary), self-managed (EC2/EKS).",
+      "Point at the cost meters — durability/HA costs more, self-managed is cheapest raw compute.",
+      "Rule of thumb: cache → ElastiCache, Redis-as-database → MemoryDB, full control → self-managed.",
+    ],
+  },
+  {
     sectionId: "leaderboard",
     bullets: [
       "Click +100 a few times. Watch items reorder via layout animation.",
       "Tie to ZADD/ZREVRANGE in the code panel. Real-world: every game backend.",
+    ],
+  },
+  {
+    sectionId: "faq",
+    bullets: [
+      "Open the floor — search box up top filters all 25 Qs across all 7 categories.",
+      "Speaker notes embed inside each FAQ card while presenter mode is on (you're in it now).",
+      "Suggested live picks: 'Why so fast?', 'Replica vs shard', 'Streams vs Kafka', 'How much can semantic caching save?' (interactive calculator).",
+      "End on the 'What would I use Redis for?' closing block to bridge into the wrap.",
     ],
   },
   {

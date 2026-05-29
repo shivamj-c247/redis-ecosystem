@@ -4,6 +4,8 @@ import { Architecture } from "@/components/sections/Architecture";
 import { DataStructures } from "@/components/sections/DataStructures";
 import { CliSimulator } from "@/components/sections/CliSimulator";
 import { ScalingPatterns } from "@/components/sections/ScalingPatterns";
+import { TraditionalDbVsRedis } from "@/components/sections/TraditionalDbVsRedis";
+import { RedisAlternatives } from "@/components/sections/RedisAlternatives";
 import { Streams } from "@/components/sections/Streams";
 import { RedisForAI } from "@/components/sections/RedisForAI";
 import { SemanticCacheDemo } from "@/components/sections/SemanticCacheDemo";
@@ -13,7 +15,9 @@ import { LangCache } from "@/components/sections/LangCache";
 import { ModernAIArchitecture } from "@/components/sections/ModernAIArchitecture";
 import { RedisCloudPricing } from "@/components/sections/RedisCloudPricing";
 import { SelfHostedVsCloud } from "@/components/sections/SelfHostedVsCloud";
+import { RedisOnAWS } from "@/components/sections/RedisOnAWS";
 import { Leaderboard } from "@/components/sections/Leaderboard";
+import { Faq } from "@/components/sections/Faq";
 import { Takeaways } from "@/components/sections/Takeaways";
 
 export default function Page() {
@@ -25,6 +29,8 @@ export default function Page() {
       <DataStructures />
       <CliSimulator />
       <ScalingPatterns />
+      <TraditionalDbVsRedis />
+      <RedisAlternatives />
       <Streams />
       <RedisForAI />
       <SemanticCacheDemo />
@@ -34,7 +40,9 @@ export default function Page() {
       <ModernAIArchitecture />
       <RedisCloudPricing />
       <SelfHostedVsCloud />
+      <RedisOnAWS />
       <Leaderboard />
+      <Faq />
       <Takeaways />
     </main>
   );

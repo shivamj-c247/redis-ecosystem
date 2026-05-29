@@ -27,7 +27,7 @@ export function SemanticCacheDemo() {
   return (
     <SectionWrapper
       id="semantic-cache"
-      number={9}
+      number={11}
       eyebrow="Live demo"
       title={
         <>

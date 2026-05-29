@@ -25,7 +25,7 @@ export function ModernAIArchitecture() {
   return (
     <SectionWrapper
       id="ai-architecture"
-      number={13}
+      number={15}
       eyebrow="Architecture"
       title={
         <>

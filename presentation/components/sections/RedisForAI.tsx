@@ -34,7 +34,7 @@ export function RedisForAI() {
   return (
     <SectionWrapper
       id="redis-ai"
-      number={8}
+      number={10}
       eyebrow="Redis for AI"
       title={
         <>

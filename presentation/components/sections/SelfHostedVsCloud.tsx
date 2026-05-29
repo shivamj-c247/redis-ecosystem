@@ -36,7 +36,7 @@ export function SelfHostedVsCloud() {
   return (
     <SectionWrapper
       id="self-hosted-vs-cloud"
-      number={15}
+      number={17}
       eyebrow="Operations"
       title={
         <>

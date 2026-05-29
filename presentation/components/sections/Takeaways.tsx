@@ -27,7 +27,7 @@ export function Takeaways() {
   return (
     <SectionWrapper
       id="takeaways"
-      number={17}
+      number={21}
       eyebrow="The four things"
       title={
         <>

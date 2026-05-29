@@ -19,7 +19,7 @@ export function AICostOptimization() {
   return (
     <SectionWrapper
       id="ai-cost"
-      number={11}
+      number={13}
       eyebrow="Cost"
       title={
         <>

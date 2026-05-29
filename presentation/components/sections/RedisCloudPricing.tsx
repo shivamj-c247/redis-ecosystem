@@ -58,7 +58,7 @@ export function RedisCloudPricing() {
   return (
     <SectionWrapper
       id="cloud-pricing"
-      number={14}
+      number={16}
       eyebrow="Pricing"
       title={
         <>

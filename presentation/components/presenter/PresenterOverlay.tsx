@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, ArrowRight, Terminal } from "lucide-react";
 import { SECTIONS } from "@/lib/sections";
+import { setPresenterMode } from "@/lib/presenter-mode";
 import { NOTES } from "./notes";
 
 function fmt(secs: number) {
@@ -28,6 +29,11 @@ export function PresenterOverlay() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Broadcast the flag so other components (e.g. FAQ speaker notes) can react.
+  useEffect(() => {
+    setPresenterMode(visible);
+  }, [visible]);
 
   // Track active section
   useEffect(() => {

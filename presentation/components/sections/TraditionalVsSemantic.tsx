@@ -10,7 +10,7 @@ export function TraditionalVsSemantic() {
   return (
     <SectionWrapper
       id="cache-vs-semantic"
-      number={10}
+      number={12}
       eyebrow="Caching"
       title={
         <>

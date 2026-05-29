@@ -35,7 +35,7 @@ export function LangCache() {
   return (
     <SectionWrapper
       id="langcache"
-      number={12}
+      number={14}
       eyebrow="Managed service"
       title={
         <>
