@@ -84,6 +84,53 @@ export const NOTES: PresenterNote[] = [
     demo: "Switch to Practical 2 to show the real KNN cache in action.",
   },
   {
+    sectionId: "cache-vs-semantic",
+    bullets: [
+      "Core idea: traditional cache matches EXACT text; semantic cache matches MEANING.",
+      "Walk the two cards — same Q2 reworded gives MISS on the left, HIT on the right.",
+      "Land the takeaway line: 'matches text' vs 'matches intent'.",
+    ],
+  },
+  {
+    sectionId: "ai-cost",
+    bullets: [
+      "Frame it: every cache hit is an LLM call you never pay for.",
+      "Drag the hit-rate slider live — watch LLM calls and $/mo savings drop.",
+      "Reduced token spend AND lower latency — two wins from one technique.",
+    ],
+  },
+  {
+    sectionId: "langcache",
+    bullets: [
+      "LangCache = the Practical 2 pattern, but managed — no vector index to run.",
+      "Walk the hit/miss decision flow: embed → vector search → return or call LLM + store.",
+      "'Why LangCache': no infra, built on Redis Vector DB, cheaper + faster AI.",
+    ],
+  },
+  {
+    sectionId: "ai-architecture",
+    bullets: [
+      "This is the RAG loop — point at Redis Vector DB as the center of gravity.",
+      "Query → embed → retrieve context → LLM → grounded answer.",
+      "Redis is vector store + memory + cache, not just one of them.",
+    ],
+  },
+  {
+    sectionId: "cloud-pricing",
+    bullets: [
+      "Free = learning/this session, Essentials = small apps, Pro = production + AI + HA.",
+      "Stress: the engine is open source — you pay for managed infra, not features.",
+    ],
+  },
+  {
+    sectionId: "self-hosted-vs-cloud",
+    bullets: [
+      "Self-hosted: cheapest, full control, but YOU own backups/failover/scaling/monitoring.",
+      "Cloud: subscription cost buys away the operational burden + enterprise AI features.",
+      "Conclusion box: you're paying for managed operations, not the software.",
+    ],
+  },
+  {
     sectionId: "leaderboard",
     bullets: [
       "Click +100 a few times. Watch items reorder via layout animation.",

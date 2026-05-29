@@ -16,8 +16,14 @@ export const SECTIONS: SectionMeta[] = [
   { id: "streams", number: 7, title: "Streams", short: "Streams", duration: 180 },
   { id: "redis-ai", number: 8, title: "Redis for AI", short: "AI", duration: 420 },
   { id: "semantic-cache", number: 9, title: "Semantic Cache Demo", short: "Cache", duration: 240 },
-  { id: "leaderboard", number: 10, title: "Leaderboard", short: "Board", duration: 180 },
-  { id: "takeaways", number: 11, title: "Takeaways", short: "Wrap", duration: 180 },
+  { id: "cache-vs-semantic", number: 10, title: "Traditional vs Semantic Caching", short: "Vs", duration: 240 },
+  { id: "ai-cost", number: 11, title: "Reducing AI Costs", short: "Cost", duration: 240 },
+  { id: "langcache", number: 12, title: "Redis LangCache", short: "LangCache", duration: 240 },
+  { id: "ai-architecture", number: 13, title: "Redis in Modern AI", short: "RAG", duration: 240 },
+  { id: "cloud-pricing", number: 14, title: "Redis Cloud Pricing", short: "Pricing", duration: 180 },
+  { id: "self-hosted-vs-cloud", number: 15, title: "Self-Hosted vs Cloud", short: "Host", duration: 240 },
+  { id: "leaderboard", number: 16, title: "Leaderboard", short: "Board", duration: 180 },
+  { id: "takeaways", number: 17, title: "Takeaways", short: "Wrap", duration: 180 },
 ];
 
 export const SECTION_IDS = SECTIONS.map((s) => s.id);

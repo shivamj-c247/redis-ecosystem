@@ -46,7 +46,7 @@ export function Leaderboard() {
   return (
     <SectionWrapper
       id="leaderboard"
-      number={10}
+      number={16}
       eyebrow="Sorted sets in action"
       title={
         <>
