@@ -2,7 +2,7 @@
 
 **Pattern:** Retrieval Augmented Generation over Redis Vector.
 
-1. Embed the user question with Gemini's `text-embedding-004` (768-dim).
+1. Embed the user question with Gemini's `gemini-embedding-001` (requesting 768-dim output).
 2. KNN search the top-3 documents from `idx:rag`.
 3. Stuff them into the Gemini prompt as context, get an answer, return with sources.
 

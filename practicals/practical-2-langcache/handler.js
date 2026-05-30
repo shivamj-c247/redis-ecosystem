@@ -5,11 +5,12 @@ const { ensureIndex, floatsToBuffer, KEY_PREFIX, INDEX_NAME } = require("./lib/i
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const CHAT_MODEL = "gemini-flash-latest";
-const EMBED_MODEL = "text-embedding-004";
+const EMBED_MODEL = "gemini-embedding-001";
+const EMBED_DIM = 768;
 
 // Cosine distance threshold — anything below this is considered a semantic hit.
-// Lower = stricter. 0.15 is a reasonable starting point for text-embedding-004.
-const SIMILARITY_THRESHOLD = 0.15;
+// Lower = stricter. 0.2 is a reasonable starting point for gemini-embedding-001.
+const SIMILARITY_THRESHOLD = 0.3;
 
 function ok(body) {
   return {
@@ -31,6 +32,7 @@ async function embed(text) {
   const r = await ai.models.embedContent({
     model: EMBED_MODEL,
     contents: text,
+    config: { outputDimensionality: EMBED_DIM },
   });
   return r.embeddings[0].values;
 }
@@ -63,10 +65,11 @@ module.exports.chat = async (event) => {
       RETURN: ["score", "question", "answer"],
     }
   );
-
+console.log("result", result);
   if (result.total > 0) {
     const hit = result.documents[0];
     const score = parseFloat(hit.value.score);
+    console.log("score", score,score <= SIMILARITY_THRESHOLD, SIMILARITY_THRESHOLD);
     if (score <= SIMILARITY_THRESHOLD) {
       return ok({
         cached: true,

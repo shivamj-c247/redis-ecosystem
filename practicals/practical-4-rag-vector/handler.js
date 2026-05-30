@@ -3,7 +3,8 @@ const { getRedis, floatsToBuffer } = require("./lib/redis");
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const CHAT_MODEL = "gemini-flash-latest";
-const EMBED_MODEL = "text-embedding-004";
+const EMBED_MODEL = "gemini-embedding-001";
+const EMBED_DIM = 768;
 const INDEX_NAME = "idx:rag";
 const TOP_K = 3;
 
@@ -38,6 +39,7 @@ module.exports.ask = async (event) => {
   const embeddingRes = await ai.models.embedContent({
     model: EMBED_MODEL,
     contents: question,
+    config: { outputDimensionality: EMBED_DIM },
   });
   const queryVec = floatsToBuffer(embeddingRes.embeddings[0].values);
 

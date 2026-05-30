@@ -6,8 +6,8 @@ const { GoogleGenAI } = require("@google/genai");
 
 const INDEX_NAME = "idx:rag";
 const KEY_PREFIX = "rag:doc:";
-const EMBED_MODEL = "text-embedding-004";
-// Gemini text-embedding-004 produces 768-dimensional vectors.
+const EMBED_MODEL = "gemini-embedding-001";
+// Request 768-dim vectors via outputDimensionality so the index DIM stays the same.
 const DIM = 768;
 
 function floatsToBuffer(arr) {
@@ -53,6 +53,7 @@ async function main() {
     const r = await ai.models.embedContent({
       model: EMBED_MODEL,
       contents: `${doc.title}\n\n${doc.body}`,
+      config: { outputDimensionality: DIM },
     });
     await redis.hSet(KEY_PREFIX + doc.id, {
       title: doc.title,

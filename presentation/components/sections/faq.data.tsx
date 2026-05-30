@@ -384,7 +384,7 @@ export const CATEGORIES: FaqCategory[] = [
         ),
         visual: <EmbeddingVisual />,
         interviewTip:
-          "Always mention the dimension count and the model — text-embedding-004 (768d) vs text-embedding-3-small (1536d).",
+          "Always mention the dimension count and the model — gemini-embedding-001 (configurable 768/1536/3072) vs text-embedding-3-small (1536d).",
         realWorld:
           "Every modern AI feature uses embeddings — search, recommendations, semantic cache, RAG.",
         speakerNotes: {

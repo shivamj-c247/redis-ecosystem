@@ -26,15 +26,7 @@ export function Hero() {
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-redis-red/20 blur-[140px]" />
 
       <motion.div style={{ scale: titleScale }} className="relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-redis-red/30 bg-redis-red/10 px-4 py-1.5 text-xs uppercase tracking-widest text-redis-redLight"
-        >
-          <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-redis-red" />
-          Live Technical Session · 50 min
-        </motion.div>
+     
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}

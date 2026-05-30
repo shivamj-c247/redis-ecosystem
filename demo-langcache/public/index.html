@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LangCache Demo · Semantic AI caching</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="badge">
+        <span class="dot"></span>
+        Live demo · Redis LangCache + Gemini
+      </div>
+      <h1>
+        Same intent. <span class="grad">Same answer.</span>
+        <br />
+        Zero new tokens.
+      </h1>
+      <p class="sub">
+        Type any question. The server checks Redis LangCache for a semantically
+        similar prompt first — only calls Gemini if nothing matches.
+      </p>
+    </header>
+
+    <section class="dash">
+      <div class="stat">
+        <div class="stat-k">Total requests</div>
+        <div class="stat-v" id="m-total">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-k">Cache hits</div>
+        <div class="stat-v hit" id="m-hits">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-k">Hit rate</div>
+        <div class="stat-v" id="m-rate">0%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-k">Latency saved</div>
+        <div class="stat-v" id="m-ms">0 ms</div>
+      </div>
+      <div class="stat">
+        <div class="stat-k">$ saved (est.)</div>
+        <div class="stat-v" id="m-usd">$0.0000</div>
+      </div>
+    </section>
+
+    <main class="card-wrap">
+      <form id="ask-form" class="card ask">
+        <label for="q" class="lbl">Your question</label>
+        <textarea
+          id="q"
+          name="q"
+          placeholder="e.g. What is Redis?"
+          rows="3"
+          autocomplete="off"
+          spellcheck="false"
+        ></textarea>
+
+        <div class="row">
+          <div class="prompts">
+            <span class="prompts-lbl">Try:</span>
+            <button type="button" class="chip" data-prompt="What is Redis?">
+              What is Redis?
+            </button>
+            <button
+              type="button"
+              class="chip"
+              data-prompt="Explain Redis in simple terms"
+            >
+              Explain Redis in simple terms
+            </button>
+            <button
+              type="button"
+              class="chip"
+              data-prompt="Tell me about Redis cache"
+            >
+              Tell me about Redis cache
+            </button>
+          </div>
+          <button type="submit" id="send" class="send">
+            <span class="send-text">Ask</span>
+            <span class="send-spin" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+
+      <section id="result" class="card result hidden" aria-live="polite">
+        <div class="result-head">
+          <div class="verdict" id="verdict">CACHE HIT</div>
+          <div class="meta">
+            <span id="latency" class="meta-pill"></span>
+            <span id="similarity" class="meta-pill hidden"></span>
+            <span id="tokens" class="meta-pill hidden"></span>
+            <span id="saved" class="meta-pill hidden"></span>
+          </div>
+        </div>
+        <div class="result-prompt">
+          <span class="result-lbl">Prompt</span>
+          <p id="r-prompt"></p>
+        </div>
+        <div class="result-answer">
+          <span class="result-lbl">Answer</span>
+          <p id="r-answer"></p>
+        </div>
+      </section>
+
+      <section class="card history">
+        <div class="history-head">
+          <h3>Recent queries</h3>
+          <span class="muted" id="history-empty">Nothing yet — ask away.</span>
+        </div>
+        <ul id="history"></ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Same intent → same answer → no new tokens. Built on
+        <a
+          href="https://redis.io/docs/latest/develop/ai/context-engine/langcache/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Redis LangCache</a
+        >.
+      </span>
+    </footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
