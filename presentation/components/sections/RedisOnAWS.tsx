@@ -129,7 +129,7 @@ export function RedisOnAWS() {
                     <div className="text-[10px] uppercase tracking-widest text-redis-muted">
                       {r.label}
                     </div>
-                    <div className="mt-0.5 text-sm text-white/90">{o[r.key]}</div>
+                    <div className="mt-0.5 text-sm text-white/90">{o[r.key as keyof Option] as string}</div>
                   </div>
                 ))}
               </div>
